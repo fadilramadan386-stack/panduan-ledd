@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Panduan Visual: Merangkai 2 LED di Breadboard</title>
+<style>
+:root{--bg:#f4f6f8;--card:#fff;--text:#1d2733;--muted:#5d6b7a;--line:#d8dee5;--bb:#ebe7da;--hole:#8c897d;--hl:#fde7ae;--pin:#cfd7e0;--gnd:#222;--acc:#d97706;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141a;--card:#1a2029;--text:#e6ebf0;--muted:#9aa7b5;--line:#2c3643;--bb:#2a2f37;--hole:#6a7380;--hl:#4b3a10;--pin:#394251;--gnd:#e6ebf0;--acc:#fbbf24}}
+:root[data-theme="dark"]{--bg:#10141a;--card:#1a2029;--text:#e6ebf0;--muted:#9aa7b5;--line:#2c3643;--bb:#2a2f37;--hole:#6a7380;--hl:#4b3a10;--pin:#394251;--gnd:#e6ebf0;--acc:#fbbf24}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Segoe UI",Roboto,Arial,sans-serif;line-height:1.55}
+main{max-width:760px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:1.5rem;margin:8px 0 6px}
+.lead{color:var(--muted);margin:0 0 20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin:0 0 18px}
+.card h2{font-size:1.1rem;margin:0 0 4px;display:flex;gap:10px;align-items:center}
+.n{flex:none;width:30px;height:30px;border-radius:50%;background:var(--acc);color:#1a1200;font-weight:700;display:grid;place-items:center}
+.card p{margin:6px 0 10px}
+.cek{margin:10px 0 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:4px;font-size:.93rem}
+.wrap{overflow-x:auto}
+svg{width:100%;min-width:520px;height:auto;display:block}
+.new{filter:drop-shadow(0 0 5px #f59e0b)}
+.t{fill:var(--text);font-size:11px}.m{fill:var(--muted);font-size:10px}
+.note{color:var(--muted);font-size:.9rem}
+h2.part{font-size:1.2rem;margin:26px 0 12px}
+pre{margin:8px 0;padding:12px;background:var(--bg);border:1px solid var(--line);border-radius:6px;overflow-x:auto;font:13px/1.65 Consolas,Menlo,monospace;color:var(--text)}
+.ln{display:block;white-space:pre;padding:0 4px}
+pre,.ln{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+textarea{width:100%;min-height:90px;margin:4px 0 8px;padding:10px;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:6px;font:14px/1.6 Consolas,Menlo,monospace;resize:vertical}
+.btn{background:var(--acc);color:#1a1200;border:0;border-radius:6px;padding:8px 16px;font-weight:700;cursor:pointer}
+.fb{margin-top:8px;font-weight:600}.fb.ok{color:#2e9d4a}.fb.no{color:#d9534f}
+.blur{filter:blur(7px);transition:filter .1s}.vault.on .blur{filter:none}
+.hold{touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;margin-bottom:10px}
+.ln.hl{background:var(--hl);border-radius:3px}
+</style>
+</head>
+<body>
+<main>
+<h1>Panduan Visual: Merangkai 2 LED di Breadboard</h1>
+<p class="lead">Kerjakan Bagian 1 (rangkaian, 7 langkah) lalu Bagian 2 (kode program, 5 langkah) secara berurutan. Komponen yang bersinar oranye dan baris kode berlatar kuning adalah yang baru di langkah itu.</p>
+<h2 class="part">Bagian 1: Merangkai rangkaian</h2>
+<div id="steps"></div>
+<h2 class="part">Bagian 2: Menulis kode program (C++)</h2>
+<p class="note">Langkah 8 sampai 11: lihat kodenya, lalu ketik sendiri di kotak dan klik Periksa. Setelah benar, ketik juga di sketch.ino Wokwi. Program lengkap di langkah 12 sengaja dibuat buram: tahan tombolnya untuk melihat.</p>
+<div id="code"></div>
+<p class="note">Catatan: pada Arduino asli, pin 5V, 13, 12, dan GND letaknya berjauhan. Di gambar ini pin digambar tepat di atas kolom tujuannya supaya mudah dilihat.</p>
+</main>
+<script>
+const X=c=>50+(c-9)*32, Y={a:150,b:170,c:190,d:210,e:230}, HL=[10,14,15,20,24,25];
+const items=[
+{s:2,t:'r',a:10,b:14,n:'R1'},{s:2,t:'r',a:20,b:24,n:'R2'},
+{s:3,t:'l',a:14,c:15,col:'#e53935'},{s:3,t:'l',a:24,c:25,col:'#43a047'},
+{s:4,t:'w',pin:'5V',c:10,col:'#e53935'},{s:5,t:'w',pin:'D13',c:15,col:'#2e9d4a'},
+{s:6,t:'w',pin:'D12',c:20,col:'#2f6fe4'},{s:7,t:'w',pin:'GND',c:25,col:'var(--gnd)'}];
+const steps=[
+['Siapkan komponen','Klik tombol biru + di Wokwi, lalu tambahkan 1 Breadboard, 2 LED (merah dan hijau), dan 2 Resistor. Klik tiap resistor dan ubah value menjadi 220.','Kolom yang berwarna kuning (10, 14, 15, 20, 24, 25) adalah kolom yang akan kita pakai.'],
+['Pasang resistor','Tancapkan R1 dengan satu kaki di kolom 10 dan kaki lain di kolom 14. Tancapkan R2 di kolom 20 dan 24.','Resistor tidak punya arah, jadi kaki mana pun boleh di kolom 10 atau 14.'],
+['Pasang LED','LED1 (merah): kaki A (anoda) di kolom 14, kaki C (katoda) di kolom 15. LED2 (hijau): A di kolom 24, C di kolom 25.','Arahkan kursor ke kaki LED untuk melihat tulisan A atau C. A harus berada di kolom yang sama dengan resistor.'],
+['Kabel 1: 5V','Tarik kabel dari pin 5V Arduino (header power) ke kolom 10.','Kolom 10 sekarang berisi kabel 5V dan kaki R1.'],
+['Kabel 2: pin 13','Tarik kabel dari pin 13 Arduino ke kolom 15.','Kolom 15 sekarang berisi kabel D13 dan katoda LED1.'],
+['Kabel 3: pin 12','Tarik kabel dari pin 12 Arduino ke kolom 20.','Kolom 20 sekarang berisi kabel D12 dan kaki R2.'],
+['Kabel 4: GND','Tarik kabel dari pin GND Arduino (di sebelah pin 13) ke kolom 25.','Rangkaian selesai. Sekarang ketik kode di sketch.ino, lalu klik tombol hijau Start. LED akan berkedip bergantian.']];
+
+function draw(step){
+ let h='<svg viewBox="0 0 640 285" role="img" aria-label="Langkah '+step+'">';
+ h+='<text class="m" x="20" y="22">Header Arduino</text>';
+ [['5V',10],['D13',15],['D12',20],['GND',25]].forEach(p=>{h+='<rect x="'+(X(p[1])-20)+'" y="36" width="40" height="24" rx="4" fill="var(--pin)"/><text class="t" x="'+X(p[1])+'" y="52" text-anchor="middle" font-weight="700">'+p[0]+'</text>'});
+ h+='<rect x="20" y="135" width="600" height="115" rx="8" fill="var(--bb)"/>';
+ HL.forEach(c=>h+='<rect x="'+(X(c)-13)+'" y="140" width="26" height="100" rx="4" fill="var(--hl)"/>');
+ for(let c=9;c<=26;c++){for(const r in Y)h+='<circle cx="'+X(c)+'" cy="'+Y[r]+'" r="3" fill="var(--hole)"/>';
+  h+='<text class="'+(HL.includes(c)?'t':'m')+'" x="'+X(c)+'" y="245" text-anchor="middle"'+(HL.includes(c)?' font-weight="700"':'')+'>'+c+'</text>'}
+ for(const r in Y)h+='<text class="m" x="32" y="'+(Y[r]+3)+'" text-anchor="middle">'+r+'</text>';
+ items.filter(i=>i.s<=step).forEach(i=>{
+  h+='<g'+(i.s==step?' class="new"':'')+'>';
+  if(i.t=='r'){const a=X(i.a),b=X(i.b);
+   h+='<line x1="'+a+'" y1="210" x2="'+b+'" y2="210" stroke="#8b8b8b" stroke-width="3"/><rect x="'+(a+28)+'" y="202" width="'+(b-a-56)+'" height="16" rx="5" fill="#d9b382" stroke="#8a6a3a"/>';
+   [[a+42,'#c62828'],[a+54,'#c62828'],[a+66,'#6d4c41']].forEach(q=>h+='<rect x="'+q[0]+'" y="202" width="5" height="16" fill="'+q[1]+'"/>');
+   h+='<text class="t" x="'+((a+b)/2)+'" y="268" text-anchor="middle">'+i.n+' 220\u03a9</text>'}
+  if(i.t=='l'){const a=X(i.a),c=X(i.c);
+   h+='<line x1="'+a+'" y1="190" x2="'+a+'" y2="172" stroke="#8b8b8b" stroke-width="3"/><line x1="'+c+'" y1="190" x2="'+c+'" y2="172" stroke="#8b8b8b" stroke-width="3"/><circle cx="'+((a+c)/2)+'" cy="166" r="15" fill="'+i.col+'"/>';
+   h+='<text class="t" x="'+a+'" y="268" text-anchor="middle" font-weight="700">A+</text><text class="t" x="'+c+'" y="268" text-anchor="middle" font-weight="700">C\u2212</text>'}
+  if(i.t=='w'){const x=X(i.c);
+   h+='<line x1="'+x+'" y1="60" x2="'+x+'" y2="150" stroke="'+i.col+'" stroke-width="4" stroke-linecap="round"/><circle cx="'+x+'" cy="60" r="4" fill="'+i.col+'"/><circle cx="'+x+'" cy="150" r="4.5" fill="'+i.col+'"/>'}
+  h+='</g>'});
+ return h+'</svg>'}
+document.getElementById('steps').innerHTML=steps.map((s,i)=>'<section class="card"><h2><span class="n">'+(i+1)+'</span>'+s[0]+'</h2><p>'+s[1]+'</p><div class="wrap">'+draw(i+1)+'</div><div class="cek">'+s[2]+'</div></section>').join('');
+const A=['dm9pZHNldHVwKCl7fXZvaWRsb29wKCl7fQ==','cGluTW9kZSgxMyxPVVRQVVQpO3Bpbk1vZGUoMTIsT1VUUFVUKTs=','ZGlnaXRhbFdyaXRlKDEzLEhJR0gpO2RpZ2l0YWxXcml0ZSgxMixISUdIKTtkZWxheSg1MDApOw==','ZGlnaXRhbFdyaXRlKDEzLExPVyk7ZGlnaXRhbFdyaXRlKDEyLExPVyk7ZGVsYXkoNTAwKTs='];
+const L=[[8,'void setup() {'],[9,'  pinMode(13, OUTPUT);   // pin 13 sebagai keluaran'],[9,'  pinMode(12, OUTPUT);   // pin 12 sebagai keluaran'],[8,'}'],[8,''],[8,'void loop() {'],[10,'  // Keadaan 1: LED1 mati, LED2 menyala'],[10,'  digitalWrite(13, HIGH);'],[10,'  digitalWrite(12, HIGH);'],[10,'  delay(500);            // tunggu 0,5 detik'],[11,''],[11,'  // Keadaan 2: LED1 menyala, LED2 mati'],[11,'  digitalWrite(13, LOW);'],[11,'  digitalWrite(12, LOW);'],[11,'  delay(500);            // tunggu 0,5 detik'],[8,'}']];
+const cs=[
+['Tulis kerangka program','Setiap program Arduino punya dua fungsi utama: setup() yang dijalankan satu kali di awal, dan loop() yang dijalankan berulang-ulang tanpa henti. Tulis keduanya dengan kurung kurawal { } (isinya boleh kosong). Tulis dengan awalan void.','Petunjuk: bentuknya nama fungsi diikuti tanda kurung (), lalu { dan }. Setiap pembuka harus punya penutup.'],
+['Atur pin di setup()','Di dalam setup(), beri tahu Arduino bahwa pin 13 dan pin 12 dipakai sebagai keluaran. Tulis dua baris perintah, satu untuk tiap pin.','Petunjuk: perintahnya pinMode(nomor_pin, mode). Mode untuk keluaran adalah OUTPUT. Setiap perintah diakhiri titik koma ;'],
+['Buat keadaan 1 di loop()','Di dalam loop(), buat keadaan 1: kirim 5V ke pin 13 dan pin 12, lalu tahan selama 0,5 detik. Tulis tiga baris perintah.','Petunjuk: digitalWrite(nomor_pin, HIGH) mengirim 5V. delay(waktu) menunggu dalam milidetik, dan 1 detik sama dengan 1000 milidetik.'],
+['Buat keadaan 2 di loop()','Masih di dalam loop(), buat keadaan 2: kirim 0V ke pin 13 dan pin 12, lalu tahan 0,5 detik lagi. Tulis tiga baris perintah.','Petunjuk: digitalWrite(nomor_pin, LOW) mengirim 0V. Pikirkan: LED mana yang menyala saat pin 13 LOW, dan mengapa?'],
+['Gabungkan dan jalankan','Susun semua jawabanmu menjadi satu program di sketch.ino Wokwi. Ketik sendiri, lalu klik tombol hijau Start.','Hasil yang benar: kedua LED berkedip bergantian setiap 0,5 detik. Tunjukkan ke guru. Tantangan: ubah delay(500) menjadi delay(1000), apa yang berubah?']];
+document.getElementById('code').innerHTML=cs.map((s,i)=>{const st=i+8;
+ const inp=i<4?'<textarea id="t'+i+'" rows="4" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" placeholder="Ketik kodemu di sini"></textarea><div><button class="btn" onclick="chk('+i+')">Periksa</button></div><div class="fb" id="f'+i+'"></div>':'';
+ const cd=L.filter(l=>st==12||l[0]==st).map(l=>'<span class="ln">'+(l[1]||' ')+'</span>').join('');
+ return '<section class="card"><h2><span class="n">'+st+'</span>'+s[0]+'</h2><p>'+s[1]+'</p><p><b>'+(st==12?'Program lengkap yang diketik di Wokwi:':'Ketik ini:')+'</b></p>'+(st==12?'<div class="vault"><pre class="blur"><code>'+cd+'</code></pre><button class="btn hold">Tahan untuk melihat kode</button></div>':'<pre><code>'+cd+'</code></pre>')+''+inp+'<div class="cek">'+s[2]+'</div></section>'}).join('');
+document.querySelectorAll('textarea').forEach(t=>t.addEventListener('paste',e=>e.preventDefault()));
+document.querySelectorAll('.hold').forEach(b=>{const v=b.parentNode,on=()=>v.classList.add('on'),off=()=>v.classList.remove('on');b.addEventListener('pointerdown',on);['pointerup','pointerleave','pointercancel'].forEach(e=>b.addEventListener(e,off));b.addEventListener('contextmenu',e=>e.preventDefault())});
+window.addEventListener('blur',()=>document.querySelectorAll('.vault.on').forEach(v=>v.classList.remove('on')));
+function chk(i){const n=document.getElementById('t'+i).value.replace(/\/\/.*$/gm,'').replace(/\s+/g,''),f=document.getElementById('f'+i),a=atob(A[i]);let m='Belum tepat. Baca lagi petunjuk, lalu coba lagi.',ok=false;
+ if(n===a){ok=true;m='Benar! Ketik juga di sketch.ino Wokwi.'}
+ else if(n.toLowerCase()===a.toLowerCase())m='Hampir benar. Periksa huruf besar dan kecil, karena C++ membedakannya.';
+ else if((n.match(/;/g)||[]).length!==(a.match(/;/g)||[]).length)m='Periksa jumlah perintah dan tanda titik koma ; di akhir tiap perintah.';
+ else if(n.split('{').length!==a.split('{').length||n.split('}').length!==a.split('}').length)m='Periksa kurung kurawal { dan }.';
+ f.className='fb '+(ok?'ok':'no');f.textContent=m}
+document.querySelectorAll('pre').forEach(p=>['copy','cut','contextmenu','selectstart','dragstart'].forEach(e=>p.addEventListener(e,ev=>ev.preventDefault())));
+</script>
+</body>
+</html>
